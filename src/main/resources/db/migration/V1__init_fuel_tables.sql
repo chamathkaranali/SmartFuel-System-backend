@@ -1,0 +1,12 @@
+CREATE TABLE users(
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE,
+    role VARCHAR(50)
+);
+
+CREATE TABLE fuel_sheds(
+    shed_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    location VARCHAR(255)
+);
