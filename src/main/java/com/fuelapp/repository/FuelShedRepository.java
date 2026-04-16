@@ -7,6 +7,9 @@ import java.util.List;
 
 @Repository
 public interface FuelShedRepository {
+    List<FuelShedDto> getAllFuelSheds();
     int save(FuelShedDto fuelShedDto);
-    List<FuelShedDto> findAll();
+    FuelShedDto findById(Long id);
+    int update(FuelShedDto fuelShedDto);
+    int deleteById(Long id);
 }
