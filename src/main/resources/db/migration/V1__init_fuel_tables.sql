@@ -19,4 +19,9 @@ INSERT INTO users (user_name, email, role) VALUES
 INSERT INTO fuel_shed (shed_name, location) VALUES
 ('FuelMart Colombo 07', 'Colombo 07'),
 ('GreenFuel Kandy', 'Kandy'),
-('CityFuel Galle', 'Galle');
+('CityFuel Galle', 'Galle'),
+('SmartFuel Negombo', 'Negombo'),
+('EcoFuel Kurunegala', 'Kurunegala'),
+('PrimeFuel Matara', 'Matara'),
+('VitalFuel Jaffna', 'Jaffna');
+

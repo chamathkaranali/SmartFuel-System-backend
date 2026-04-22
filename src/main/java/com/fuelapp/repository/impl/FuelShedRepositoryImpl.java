@@ -15,57 +15,51 @@ public class FuelShedRepositoryImpl implements FuelShedRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<FuelShedDto> stationRowMapper = (rs, rowNum) -> {
+    private final RowMapper<FuelShedDto> fuelShedRowMapper = (rs, rowNum) -> {
         return new FuelShedDto(
-                rs.getLong("id"),
-                rs.getString("name"),
+                rs.getLong("shed_id"),
+                rs.getString("shed_name"),
                 rs.getString("location"),
-                rs.getDouble("latitude"),
-                rs.getDouble("longitude"),
-                rs.getTimestamp("last_updated") != null ? rs.getTimestamp("last_updated").toLocalDateTime() : null
+                null,
+                null,
+                null
         );
     };
 
     @Override
     public List<FuelShedDto> getAllFuelSheds() {
-        String sql = "SELECT * FROM fuel_sheds";
-        return jdbcTemplate.query(sql, stationRowMapper);
+        String sql = "SELECT shed_id, shed_name, location FROM fuel_shed";
+        return jdbcTemplate.query(sql, fuelShedRowMapper);
     }
 
     @Override
     public int save(FuelShedDto fuelShedDto) {
-        String sql = "INSERT INTO fuel_sheds (name, location, latitude, longitude, last_updated) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO fuel_shed (shed_name, location) VALUES (?, ?)";
         return jdbcTemplate.update(sql,
                 fuelShedDto.getName(),
-                fuelShedDto.getLocation(),
-                fuelShedDto.getLatitude(),
-                fuelShedDto.getLongitude(),
-                fuelShedDto.getLastUpdated()
+                fuelShedDto.getLocation()
         );
     }
 
     @Override
     public FuelShedDto findById(Long id) {
-        String sql = "SELECT * FROM fuel_sheds WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, stationRowMapper, id);
+        String sql = "SELECT shed_id, shed_name, location FROM fuel_shed WHERE shed_id = ?";
+        return jdbcTemplate.queryForObject(sql, fuelShedRowMapper, id);
     }
 
     @Override
     public int update(FuelShedDto fuelShedDto) {
-        String sql = "UPDATE fuel_sheds SET name = ?, location = ?, latitude = ?, longitude = ?, last_updated = ? WHERE id = ?";
+        String sql = "UPDATE fuel_shed SET shed_name = ?, location = ? WHERE shed_id = ?";
         return jdbcTemplate.update(sql,
                 fuelShedDto.getName(),
                 fuelShedDto.getLocation(),
-                fuelShedDto.getLatitude(),
-                fuelShedDto.getLongitude(),
-                fuelShedDto.getLastUpdated(),
                 fuelShedDto.getId()
         );
     }
 
     @Override
     public int deleteById(Long id) {
-        String sql = "DELETE FROM fuel_sheds WHERE id = ?";
+        String sql = "DELETE FROM fuel_shed WHERE shed_id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

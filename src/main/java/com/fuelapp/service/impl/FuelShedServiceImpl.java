@@ -21,7 +21,7 @@ public class FuelShedServiceImpl implements FuelShedService {
     @Override
     public FuelShedDto getFuelShedById(Long id) {
         FuelShedDto fuelShed = fuelShedRepository.findById(id);
-        if (fuelShed != null) {
+        if (fuelShed == null) {
             throw new RuntimeException("Fuel shed not found with id: " + id);
         }
         return fuelShed;
