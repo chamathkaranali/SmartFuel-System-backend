@@ -1,11 +1,11 @@
 package com.fuelapp.controller;
 
 import com.fuelapp.dto.FuelShedDto;
+import com.fuelapp.repository.FuelShedRepository;
 import com.fuelapp.service.FuelShedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -15,29 +15,35 @@ import java.util.List;
 public class FuelShedController {
 
     private final FuelShedService fuelShedService;
+    private final FuelShedRepository fuelShedRepository;
 
     @GetMapping
-    public List<FuelShedDto> getAllFuelSheds() {
-        return fuelShedService.getAllFuelSheds();
+    public List<FuelShedDto> getAllCustomer(){
+        return fuelShedService.getAllShed();
     }
 
     @PostMapping
-    public boolean addFuelShed(@Validated @RequestBody FuelShedDto fuelShedDto) {
-        return fuelShedService.createFuelShed(fuelShedDto);
+    public boolean addCustomer(@Validated @RequestBody FuelShedDto fuelDto){
+        return fuelShedService.addShed(fuelDto);
+    }
+
+    @GetMapping("/phone/{phone}")
+    public FuelShedDto searchCustomerByPhone(@PathVariable String phone){
+        return fuelShedService.searchShedByPhone(phone);
     }
 
     @GetMapping("/{id}")
-    public FuelShedDto searchFuelShedById(@PathVariable Long id) {
-        return fuelShedService.getFuelShedById(id);
-    }
-
-    @PutMapping("/{id}")
-    public boolean updateFuelShed(@PathVariable Long id, @Validated @RequestBody FuelShedDto fuelShedDto) {
-        return fuelShedService.updateFuelShed(id, fuelShedDto);
+    public FuelShedDto searchCustomerById(@PathVariable Integer id){
+        return fuelShedService.searchShedById(id);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteFuelShed(@PathVariable Long id) {
-        return fuelShedService.deleteFuelShed(id);
+    public boolean deleteCustomerByPhone(@PathVariable Integer id){
+        return fuelShedService.deleteShedByPhone(id);
+    }
+
+    @PutMapping
+    public boolean updateCustomer(@Validated @RequestBody FuelShedDto fuelDto){
+        return fuelShedService.updateShed(fuelDto);
     }
 }

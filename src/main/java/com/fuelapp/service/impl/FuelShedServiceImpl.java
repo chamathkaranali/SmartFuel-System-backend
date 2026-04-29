@@ -14,39 +14,32 @@ public class FuelShedServiceImpl implements FuelShedService {
     private final FuelShedRepository fuelShedRepository;
 
     @Override
-    public List<FuelShedDto> getAllFuelSheds() {
-        return fuelShedRepository.getAllFuelSheds();
+    public List<FuelShedDto> getAllShed() {
+        return fuelShedRepository.getAllCustomers();
     }
 
     @Override
-    public FuelShedDto getFuelShedById(Long id) {
-        FuelShedDto fuelShed = fuelShedRepository.findById(id);
-        if (fuelShed == null) {
-            throw new RuntimeException("Fuel shed not found with id: " + id);
-        }
-        return fuelShed;
+    public boolean addShed(FuelShedDto fuelShedDto) {
+        return fuelShedRepository.saveCustomer(fuelShedDto);
     }
 
     @Override
-    public boolean createFuelShed(FuelShedDto fuelShedDto) {
-        int result = fuelShedRepository.save(fuelShedDto);
-        return result > 0;
+    public FuelShedDto searchShedByPhone(String phone) {
+        return fuelShedRepository.searchFuelByPhone(phone).orElse(null);
     }
 
     @Override
-    public boolean updateFuelShed(Long id, FuelShedDto fuelShedDto) {
-        FuelShedDto existingFuelShed = fuelShedRepository.findById(id);
-        if (existingFuelShed != null) {
-            fuelShedDto.setId(id);
-            int result = fuelShedRepository.update(fuelShedDto);
-            return result > 0;
-        }
-        return false;
+    public FuelShedDto searchShedById(Integer id) {
+        return fuelShedRepository.searchFuelById(id).orElse(null);
     }
 
     @Override
-    public boolean deleteFuelShed(Long id) {
-        int result = fuelShedRepository.deleteById(id);
-        return result > 0;
+    public boolean deleteShedByPhone(Integer id) {
+        return fuelShedRepository.deleteFuelByPhone(id);
+    }
+
+    @Override
+    public boolean updateShed(FuelShedDto fuelShedDto) {
+        return fuelShedRepository.updateFuel(fuelShedDto);
     }
 }

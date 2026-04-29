@@ -4,9 +4,10 @@ import com.fuelapp.dto.FuelShedDto;
 import java.util.List;
 
 public interface FuelShedService {
-    List<FuelShedDto> getAllFuelSheds();
-    FuelShedDto getFuelShedById(Long id);
-    boolean createFuelShed(FuelShedDto fuelShedDto);
-    boolean updateFuelShed(Long id, FuelShedDto fuelShedDto);
-    boolean deleteFuelShed(Long id);
+    List<FuelShedDto> getAllShed();
+    boolean addShed(FuelShedDto fuelShedDto);
+    FuelShedDto searchShedByPhone(String phone);
+    FuelShedDto searchShedById(Integer id);
+    boolean deleteShedByPhone(Integer id);
+    boolean updateShed(FuelShedDto fuelShedDto);
 }
