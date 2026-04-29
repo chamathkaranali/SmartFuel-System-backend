@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,57 +16,63 @@ public class FuelShedRepositoryImpl implements FuelShedRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<FuelShedDto> stationRowMapper = (rs, rowNum) -> {
-        return new FuelShedDto(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("location"),
-                rs.getDouble("latitude"),
-                rs.getDouble("longitude"),
-                rs.getTimestamp("last_updated") != null ? rs.getTimestamp("last_updated").toLocalDateTime() : null
-        );
+    private final RowMapper<FuelShedDto> rowMapper = (rs, rowNum) -> {
+            FuelShedDto fuel = new FuelShedDto();
+            fuel.setId(rs.getInt("id"));
+            fuel.setName(rs.getString("name"));
+            fuel.setLocation(rs.getString("location"));
+            fuel.setLatitude(rs.getDouble("latitude"));
+            fuel.setLongitude(rs.getDouble("longitude"));
+            fuel.setLastUpdated(rs.getTimestamp("last_updated").toLocalDateTime());
+            return fuel;
     };
 
     @Override
-    public List<FuelShedDto> getAllFuelSheds() {
-        String sql = "SELECT * FROM fuel_sheds";
-        return jdbcTemplate.query(sql, stationRowMapper);
+    public List<FuelShedDto> getAllCustomers() {
+        String sql = "SELECT * FROM fuel_shed";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
-    public int save(FuelShedDto fuelShedDto) {
-        String sql = "INSERT INTO fuel_sheds (name, location, latitude, longitude, last_updated) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
-                fuelShedDto.getName(),
-                fuelShedDto.getLocation(),
-                fuelShedDto.getLatitude(),
-                fuelShedDto.getLongitude(),
-                fuelShedDto.getLastUpdated()
+    public boolean saveCustomer(FuelShedDto dto) {
+        String sql = "INSERT INTO fuel_shed (name, location, latitude, longitude) VALUES (?,?,?,?)";
+        int result = jdbcTemplate.update(sql,
+                dto.getName(),
+                dto.getLocation(),
+                dto.getLatitude(),
+                dto.getLongitude()
         );
+        return result > 0;
     }
 
     @Override
-    public FuelShedDto findById(Long id) {
-        String sql = "SELECT * FROM fuel_sheds WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, stationRowMapper, id);
+    public Optional<FuelShedDto> searchFuelByPhone(String phone) {
+        String sql = "SELECT * FROM fuel_shed WHERE location LIKE ?";
+        return jdbcTemplate.query(sql, rowMapper, "%" + phone + "%").stream().findFirst();
     }
 
     @Override
-    public int update(FuelShedDto fuelShedDto) {
-        String sql = "UPDATE fuel_sheds SET name = ?, location = ?, latitude = ?, longitude = ?, last_updated = ? WHERE id = ?";
-        return jdbcTemplate.update(sql,
-                fuelShedDto.getName(),
-                fuelShedDto.getLocation(),
-                fuelShedDto.getLatitude(),
-                fuelShedDto.getLongitude(),
-                fuelShedDto.getLastUpdated(),
-                fuelShedDto.getId()
+    public Optional<FuelShedDto> searchFuelById(Integer id) {
+        String sql = "SELECT * FROM fuel_shed WHERE id = ?";
+        return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
+    }
+
+    @Override
+    public boolean deleteFuelByPhone(Integer id) {
+        String sql = "DELETE FROM fuel_shed WHERE location LIKE ?";
+        return jdbcTemplate.update(sql, "%" + id + "%") > 0;
+    }
+
+    @Override
+    public boolean updateFuel(FuelShedDto fuelDto) {
+        String sql = "UPDATE fuel_shed SET name = ?, location = ?, latitude = ?, longitude = ? WHERE id = ?";
+        int result = jdbcTemplate.update(sql,
+                fuelDto.getName(),
+                fuelDto.getLocation(),
+                fuelDto.getLatitude(),
+                fuelDto.getLongitude(),
+                fuelDto.getId()
         );
-    }
-
-    @Override
-    public int deleteById(Long id) {
-        String sql = "DELETE FROM fuel_sheds WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        return result > 0;
     }
 }

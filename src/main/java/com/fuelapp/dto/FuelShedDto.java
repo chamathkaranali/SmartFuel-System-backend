@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FuelShedDto {
-    private Long id;
+    private int id;
     private String name;
     private String location;
     private Double latitude;
